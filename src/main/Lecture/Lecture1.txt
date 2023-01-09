@@ -1,0 +1,26 @@
+스프링 배치 시작
+    프로젝트 구성 및 의존성 설정
+        스프링 배치 활성화를 위해서
+        @EnableBatchProcessing 어노테이션이 필요하다.
+        총 4개의 설정 클래스를 실행시키며 스프링 배치의 모든 초기화 및 실행 구성이 이루어진다.
+            4개의 설정 클래스에는 무엇이 있을까???
+            1.BatchAutoConfiguration
+                스프링 배치가 초기화 될 때 자동으로 실행되는 설정 클래스
+                Job을 수행하는 JobLauncherApplicationRunner 빈을 생성
+            2.SimpleBatchConfiguration
+                JobBuilderFactory와 StepBuilderFactory 생성
+                스프링 배치의 주요 구성 요소 생성 -> 프록시 객체로 생성됨
+            3.BatchConfigurerConfiguration
+                3.1.BasicBatchConfigurer
+                    SimpleBatchConfiguration에서 생성한 프록시 객체의 실제 대상 객체를 생성하는 설정클래스
+                    빈으로 의존성 주입 받아서 주요 객체들을 참조해서 사용할 수 있다.
+                3.2.JpaBatchConfigurer
+                    JPA 관련 객체를 생성하는 설정 클래스
+                사용자 정의 BatchConfigurer를 만들어서 사용할 수 있다.
+        스프링 부트 배치의 자동 설정 클래스가 실행됨으로 빈으로 등록된 모든 Job을 검색해서 초기화와 동시에 Job을 수행하도록 구성됨
+
+        2 -> 3 -> 1 순으로 실행됨
+
+        빈들을 생성할때 createLazyProxy() 메서드를 사용해서 프록시 객체를 생성한다.(실제 객체는 아니다.)
+
+    Hello Spring Batch 시작하기
