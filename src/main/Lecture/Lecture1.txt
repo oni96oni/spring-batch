@@ -24,3 +24,36 @@
         빈들을 생성할때 createLazyProxy() 메서드를 사용해서 프록시 객체를 생성한다.(실제 객체는 아니다.)
 
     Hello Spring Batch 시작하기
+        1. @Configuration
+            하나의 배치 Job을 정의하고 빈 설정
+        2. JobBuilderFactory
+            Job을 생성하는 빌더 팩토리
+        3. StepBuilderFacytory
+            Step을 생성하는 빌더 팩토리
+        4. Job
+            helloJob 이름으로 Job 생성
+        5. Step
+            helloStep 이름으로 Step 생성
+        6. tasklet
+            Step 안에서 단일 테스크로 수행되는 로직 구현
+        7. Job 구동 -> Step을 실행 -> Tasklet을 실행
+
+        Job이 구동되면 Step을 실행하고 Step이 구동되면 Tasklet을 실행하도록 설정함(여기에서는)
+
+        jobBuilderFactory.get("helloJob") -> Job 객체 생성
+        stepBuilderFactyory.get("helloStep") -> Step 객체 생성
+        tasklet(contribution, chunkContext) -> Tasklet 객체 생성
+
+        Job이 구동되면 Step을 실행하고 Step이 구동되면 Tasklet을 실행하도록 설정함
+
+        Job
+            일, 일감
+            여러 단계의 항목 구성
+        Step
+            일의 항목, 단계
+        Tasklet
+            실제의 작업 내용
+
+        tasklet을 무한반복시켜서 제어하기 위해 repeatStatus에서 반복을 계속할지 종료할지 결정한다.
+
+    DB 스키마 생성 및 이해(1)
