@@ -57,3 +57,31 @@
         tasklet을 무한반복시켜서 제어하기 위해 repeatStatus에서 반복을 계속할지 종료할지 결정한다.
 
     DB 스키마 생성 및 이해(1)
+        스프링 배치의 실행 및 관리를 위한 목적으로 여러 도메인들(Job, Step, JobParameters..)의 정보들을 저장 업데이트, 조회할수 있는 스키마 제공
+        db와 연동할 경우 필수적으로 메타 테이블이 생성 되어야 한다.
+
+    DB 스키마 생성 및 이해(2)
+        Job 관련 테이블
+            BATCH_JOB_INSTANCE
+                Job이 실행될 때 JobInstance 정보가 저장되며 job_nmae과 job_key를 키로하여 하나의 데이터가 저장
+                동일한 jon_name과 job_key로 중복 저장될 수 없다.
+
+            BATCH_JOB_EXECUTION
+                Job의 실행정보가 저장되며 Job생성, 시작, 종료시간, 실행상태, 메시지 등을 관리
+                -> job이 실행될 때 마다 저장이된다.(중복이어도 당연히저장된다 version으로 구분이 되니까)
+
+            BATCH_JOB_EXECUTION_PARAMS
+                Job과 함께 실행되는 JobParameter 정보를 저장
+
+            BATCH_JOB_CONTEXT
+                Job의 실행동안 여러가지 상태정보, 공유 데이터를 직렬화 (Json 형식) 해서 저장
+                Step간 서로 공유 가능함
+
+        Step 관련 테이블
+            BATCH_STEP_EXECUTION
+                Step의 실행정보가 저장되며 생성, 시작, 종료시간, 실행상태, 메시지 등을 관리
+
+            BATCH_STEP_EXECUTION_CONTEXT
+                Step의 실행동안 여러가지 상태정보, 공유 데이터를 직렬화 (Json 형식) 해서 저장
+                Step 별로 저장되며 Step간 서로 공유할 수 없음
+
