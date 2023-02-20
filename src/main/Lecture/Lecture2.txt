@@ -41,4 +41,61 @@
             우선 받은 인자의 값으로 DB에 조회를 해서 실행을 한적이 있는지 없는지 확인을 먼저 한다!
 
     JobParameter
+        기본개념
+            Job을 실행할 때 함께 포함되어 사용되는 파라미터를 가진 도메인 객체
+                (JobLauncher라는 클래스가 Job을 실행 Job과 JobParameter를 인자로 받는다.)
+                JobParameter는 key, value 즉 map구조로 되어 있다.
+
+            하나의 Job에 존재할 수 있는 여러개의 JobInstance를 구분하기 위한 용도
+                Job을 여러번 실행시킬때 JobInstance가 여러개 생성이 되는데 이것들을 구분할 수 있는 이유는 JobParameter 때문이다.
+
+            JobParameters와 JobInstance는 1:1 관계
+
+        생성 및 바인딩
+            1. 어플리케이션 실행 시 주입
+                Java -jar LogBatch.jar requestDate=20230208
+
+            2. 코드로 생성
+                JobParameterBuilder, DefaultJobParametersConverter
+
+            3. SpEL 이용
+                @Value("#{jobParameter[requestDate]}") -> @JobScope, @StepScope 선언 필수
+
+        BATCH_JOB_EXECUTION_PARAM 테이블과 매핑
+            JOB_EXECUTION과 1:M의 관계
+
+        구조
+            JobParameters라는 클래스가 JobParameter를 감싸고있다 (wrapper 클래스)
+                -> LinkedHashMap<String, JobParameter> parameters
+
+            JobParameter는 Object타입의 parameter를 가지고 있는데 여기에 주로 우리가 값을 저장한다.
+            ParameterType parameterType -> JobParameter의 타입을 저장하는 enum 클래스
+                (4개의 타입 지원 -> STRING, LONG, DATE, DOUBLE)
+            boolean identifying -> JobInstance를 구분하는데 사용되는지 여부를 저장하는 필드
+
+            저장예시
+                {"requestDate", new Date()}, {"run.id", 2L}, {"name", "user"}
+                위의 예시들을 저장을 하면 BATCH_JOB_EXECUTION_PARAM에 저장이 된다.
+
+    JobExecution
+
+    Step
+        기본개념
+            독립적인 하나의 단계 -> 여러 개의 step 구성 가능, 각각의 step들은 독립적으로 생성, 수행된다.
+            Job이 이런 step들을 보유, 단계별로 실행등을 한다.
+
+        기본 구현체
+            TaskletStep
+                가장 기본이되는 클래스로서 Tasklet 타입의 구현체들을 제어
+            PartitionStep
+                멀티 스레드 방식으로 Step을 여러개로 분리해서 실행한다.
+            JobStep
+                Step 내에서 Job을 실행하도록 한다.
+            FlowStep
+                Step 내에서 Flow를 실행하도록 한다.
+
+            chunk기반(ItemReader, ItemProcessor, ItemWriter)을 구성할 수 있다. Step안에 Tasklet에서
+                위의것들을 ChunkOrientedTasklet이라고도 한다.
+
+        API 설정에 따른 각 Step 생성
 

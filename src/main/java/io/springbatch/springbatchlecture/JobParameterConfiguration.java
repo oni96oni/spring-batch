@@ -7,19 +7,19 @@ import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.scope.context.ChunkContext;
-import org.springframework.batch.core.step.item.Chunk;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
-//@Configuration
 @RequiredArgsConstructor
-public class DBJobConfiguration {
+@Configuration
+public class JobParameterConfiguration {
 
+    @Autowired
     private final JobBuilderFactory jobBuilderFactory;
+    @Autowired
     private final StepBuilderFactory stepBuilderFactory;
 
     @Bean
@@ -30,24 +30,26 @@ public class DBJobConfiguration {
                 .build();
     }
 
-    private Step step1() {
+    @Bean
+    public Step step1() {
         return stepBuilderFactory.get("step1")
                 .tasklet(new Tasklet() {
-                   @Override
-                   public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                       System.out.println("step1");
-                       return RepeatStatus.FINISHED;
-                   }
+                    @Override
+                    public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
+                        System.out.println("step1 has executed");
+                        return RepeatStatus.FINISHED;
+                    }
                 })
                 .build();
     }
 
-    private Step step2() {
+    @Bean
+    public Step step2() {
         return stepBuilderFactory.get("step2")
                 .tasklet(new Tasklet() {
                     @Override
-                    public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-                        System.out.println("step1");
+                    public RepeatStatus execute(StepContribution stepContribution, ChunkContext chunkContext) throws Exception {
+                        System.out.println("step2 has executed");
                         return RepeatStatus.FINISHED;
                     }
                 })
