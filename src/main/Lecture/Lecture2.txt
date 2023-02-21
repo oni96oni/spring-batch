@@ -99,3 +99,10 @@
 
         API 설정에 따른 각 Step 생성
 
+    StepExecution
+        Step에 대한 한번의 시도를 의미하는 객체.
+        Step이 실제로 시작됐을때만 StepExecution을 생성한다. 실패하든 성공하든
+
+        Job -> JobExecution -> Step -> StepExecution -> COMPLETE면은 Job은 최종 성공
+
+    StepContribution
